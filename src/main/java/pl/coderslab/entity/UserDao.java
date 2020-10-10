@@ -28,8 +28,7 @@ public class UserDao {
     private static final String READ_USERS_EMAIL_END_LIKE_QUERY = "SELECT username,email,password FROM users WHERE email like='?%';";
 
     private String setPassword(User user) {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(COMPARE_PASSWORD);
+        try (Connection conn = DBUtil.getConnection();PreparedStatement statement = conn.prepareStatement(COMPARE_PASSWORD);) {
             statement.setLong(1, user.getId());
             statement.setString(2, user.getPassword());
             ResultSet resultSet = statement.executeQuery();
@@ -47,8 +46,7 @@ public class UserDao {
     }
 
     public User create(User user) {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(CREATE_USER_QUERY, Statement.RETURN_GENERATED_KEYS);
+        try (Connection conn = DBUtil.getConnection();PreparedStatement statement = conn.prepareStatement(CREATE_USER_QUERY, Statement.RETURN_GENERATED_KEYS);) {
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
             statement.setString(3, hashPassword(user.getPassword()));
@@ -65,8 +63,7 @@ public class UserDao {
     }
 
     public User read(long userId) {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(READ_USER_QUERY);
+        try (Connection conn = DBUtil.getConnection();PreparedStatement statement = conn.prepareStatement(READ_USER_QUERY);) {
             statement.setLong(1, userId);
             ResultSet resultSet = statement.executeQuery();
             User user = new User();
@@ -84,8 +81,7 @@ public class UserDao {
     }
 
     public int update(User user) {
-        try (Connection conn = DBUtil.getConnection()) {
-            PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY);
+        try (Connection conn = DBUtil.getConnection();PreparedStatement statement = conn.prepareStatement(UPDATE_USER_QUERY);) {
             statement.setString(1, user.getUserName());
             statement.setString(2, user.getEmail());
             statement.setString(3, setPassword(user));
@@ -111,9 +107,9 @@ public class UserDao {
     }
 
     private User[] addToArray(User u, User[] users) {
-        User[] tmpUsers = Arrays.copyOf(users, users.length + 1); // Tworzymy kopię tablicy powiększoną o 1.
-        tmpUsers[users.length] = u; // Dodajemy obiekt na ostatniej pozycji.
-        return tmpUsers; // Zwracamy nową tablicę.
+        User[] tmpUsers = Arrays.copyOf(users, users.length + 1);
+        tmpUsers[users.length] = u;
+        return tmpUsers;
     }
 
     public User[] findAll() {
